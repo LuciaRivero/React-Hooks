@@ -2,7 +2,7 @@
 import React, { useState, Fragment } from 'react';
 
 
-function Cita({cita}) {
+function Cita({cita, index, eliminarCita}) { //destructoring
 
   return (
     <div className="cita">
@@ -11,6 +11,9 @@ function Cita({cita}) {
       <p>Fecha: <span>{cita.fecha}</span></p>
       <p>Hora: <span>{cita.hora}</span></p>
       <p>Sintomas:<span>{cita.sintomas}</span></p>
+      <button type="button" 
+        onClick={() => eliminarCita(index)}
+      className="button eliminar u-full-width">Eliminar X</button>
     </div>
   )}
 function Formulario({crearCita}) {
@@ -119,8 +122,16 @@ function App() {
     guardarCita(nuevasCitas);
 
   }
-  
-  console.log(citas);
+ 
+  //elimina las citas del state
+  const eliminarCita = (index) => {
+    const nuevasCitas = [...citas]; //spred operator
+
+    nuevasCitas.splice(index, 1) //quito elemento del state
+
+    guardarCita(nuevasCitas);
+  }
+
 
   return(
     <Fragment>
@@ -137,6 +148,7 @@ function App() {
                  key={index}
                  index={index}
                  cita={cita}
+                 eliminarCita={eliminarCita}
                  />
               ))}
             </div>
