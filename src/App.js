@@ -1,5 +1,5 @@
 
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 
 
 function Cita({cita, index, eliminarCita}) { //destructoring
@@ -104,11 +104,17 @@ function Formulario({crearCita}) {
 }
 
 function App() {
+  //cargar las citas de local storage
+  let citasIniciales = JSON.parse(localStorage.getItem('citas'));
+    //si hay algo en el local storage el valor se mantiene y si no hay se crea un objeto vacio.
+      if(!citasIniciales) {
+        citasIniciales = [];
+      } 
   //useState retorna 2 funciones (dos piezas)
   //el  state actual = this.state;
   //funcion que actualiza el state this.setState();
 
-  const [citas, guardarCita] = useState([]); // [] es valor inicial.
+  const [citas, guardarCita] = useState(citasIniciales); // [] es para valor inicial, en este caso se modifica para mantener los valores ya almacenados en local storage.
 
   //agregar las nuevas citas al state
 
@@ -132,6 +138,24 @@ function App() {
     guardarCita(nuevasCitas);
   }
 
+  //useEffect
+  //se ejecuta cuando inicia la app o cuando se modifica algo; reemplaza a lo que es componentDidMount y componentDidUpdate.
+  useEffect(
+    () => {
+      let citasIniciales = JSON.parse(localStorage.getItem('citas'));
+
+      if(citasIniciales) {
+        localStorage.setItem('citas', JSON.stringify(citas));
+      } else {
+        localStorage.setItem('citas', JSON.stringify([])); // se ejecuta la primera vez, que no existe citas en local storage, la siguiente vez ya existe el arreglo vacio y toma lo del state y lo convierte en string.
+      }
+    }, [citas] // se ejecuta el useeffect solo cuando las citas tengan un cambio.
+  ) 
+    
+
+  //cargar dinamicamente un titulo
+
+  const titulo = Object.keys(citas).length === 0? "No hay citas" : "administrar las citas"; //object key no retorna valores solo las posiciones y es una buena forma de verificar si el arreglo esta vacio.
 
   return(
     <Fragment>
@@ -143,6 +167,7 @@ function App() {
             crearCita={crearCita}/>
             </div>
             <div className="one-half column">
+              <h2>{titulo}</h2>
               {citas.map((cita, index) => (
                 <Cita
                  key={index}
