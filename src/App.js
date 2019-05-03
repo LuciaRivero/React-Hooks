@@ -149,7 +149,7 @@ function App() {
       } else {
         localStorage.setItem('citas', JSON.stringify([])); // se ejecuta la primera vez, que no existe citas en local storage, la siguiente vez ya existe el arreglo vacio y toma lo del state y lo convierte en string.
       }
-    }, [citas] // se ejecuta el useeffect solo cuando las citas tengan un cambio.
+    }, [citas] // se ejecuta el useeffect solo cuando las citas tengan un cambio de otra forma se ejecutaria todo el tiempo incluso si las citas no fueron modificadas..
   ) 
     
 
